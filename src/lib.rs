@@ -2,12 +2,16 @@ use worker::*;
 
 #[event(fetch)]
 async fn fetch(
-    _req: HttpRequest,
+    req: Request,
     _env: Env,
     _ctx: Context,
-) -> Result<HttpResponse> {
+) -> Result<Response> {
     console_error_panic_hook::set_once();
-    Ok(http::Response::builder()
-        .status(http::StatusCode::OK)
-        .body(Body::empty())?)
+
+    console_log!(
+        "Received request: method={}, url={}",
+        req.method().to_string(),
+        req.url()?.to_string()
+    );
+    Response::ok("Hello world!")
 }
