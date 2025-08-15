@@ -39,6 +39,7 @@ jobs:
 
       - name: Optimize WASM
         run: |
+          mkdir -p build
           wasm-opt target/wasm32-unknown-unknown/release/emeditor_get_price.wasm -o build/worker.wasm --enable-bulk-memory --enable-bulk-memory-opt -O
 
       - name: Deploy Worker
