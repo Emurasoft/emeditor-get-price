@@ -3,7 +3,7 @@ main = "build/worker/shim.mjs"
 compatibility_date = "2025-08-15"
 
 [build]
-command = "cargo install -q worker-build && worker-build --release --no-wasm-opt"
+command = "cargo install -q worker-build && worker-build --release"
 
 [observability.logs]
 enabled = true
