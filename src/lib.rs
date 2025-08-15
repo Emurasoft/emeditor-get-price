@@ -196,3 +196,24 @@ async fn fetch(
 
     Ok(res)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_currency_and_price() {
+        {
+            let res = get_currency_and_price("JP");
+            assert_eq!(res.currency, "JPY");
+            assert_eq!(res.annual, "9000円");
+            assert_eq!(res.monthly, "900円");
+        }
+        {
+            let res = get_currency_and_price("ZZ");
+            assert_eq!(res.currency, "USD");
+            assert_eq!(res.annual, "$60");
+            assert_eq!(res.monthly, "$6");
+        }
+    }
+}
