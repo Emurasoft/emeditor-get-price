@@ -73,6 +73,30 @@ pub static COUNTRY_TO_CURRENCY: phf::Map<&'static str, &'static str> = phf_map! 
     "TW" => "TWD",
 };
 
+// CORS: allowed origins for emeditor.com properties
+const ALLOWED_ORIGINS: [&str; 7] = [
+    "https://www.emeditor.com",
+    "https://jp.emeditor.com",
+    "https://ko.emeditor.com",
+    "https://de.emeditor.com",
+    "https://zh-cn.emeditor.com",
+    "https://zh-tw.emeditor.com",
+    "https://ru.emeditor.com",
+];
+
+fn normalize_origin(origin: &str) -> &str {
+    origin.trim_end_matches('/')
+}
+
+/// Check if an Origin is allowed for CORS.
+fn is_allowed_origin(origin: &str) -> bool {
+    if origin.is_empty() {
+        return false;
+    }
+    let norm = normalize_origin(origin);
+    ALLOWED_ORIGINS.iter().any(|&o| o == norm)
+}
+
 /// Resolve currency and price for a given two-letter country code (e.g., "US", "JP").
 /// Falls back to USD if the country or currency is unmapped.
 fn get_currency_and_price(country: &str) -> PriceResponse {
@@ -99,22 +123,47 @@ struct PriceResponse {
 
 #[event(fetch)]
 async fn fetch(
-    req: Request,
+    mut req: Request,
     _env: Env,
     _ctx: Context,
 ) -> Result<Response> {
     console_error_panic_hook::set_once();
 
-    // Get the headers from the incoming request
+    let method = req.method();
     let headers = req.headers();
 
+    // Resolve CORS origin
+    let origin = headers.get("Origin")?.unwrap_or_default();
+    let cors_allowed = is_allowed_origin(origin.as_str());
+
+    if method == Method::Options {
+        // Handle CORS preflight
+        let mut res = Response::empty()?.with_status(204);
+        if cors_allowed {
+            let h = res.headers_mut();
+            // Use the request Origin exactly (no wildcard) when allowed
+            h.set("Access-Control-Allow-Origin", normalize_origin(origin.as_str()))?;
+            h.set("Vary", "Origin")?;
+            h.set("Access-Control-Allow-Methods", "GET, OPTIONS")?;
+            // Allow common headers; if specific headers requested, you could echo them back
+            h.set("Access-Control-Allow-Headers", "Content-Type, CF-IPCountry")?;
+            h.set("Access-Control-Max-Age", "86400")?; // cache preflight for 1 day
+        }
+        return Ok(res);
+    }
+
     // Read Cloudflare's CF-IPCountry header (two-letter country code like "US", "JP").
-    let country = headers
-        .get("CF-IPCountry")?
-        .unwrap_or_default();
+    let country = headers.get("CF-IPCountry")?.unwrap_or_default();
 
     // Determine currency and price using helper function.
     let out = get_currency_and_price(country.as_str());
 
-    Response::from_json(&out)
+    let mut res = Response::from_json(&out)?;
+    if cors_allowed {
+        let h = res.headers_mut();
+        h.set("Access-Control-Allow-Origin", normalize_origin(origin.as_str()))?;
+        h.set("Vary", "Origin")?;
+    }
+
+    Ok(res)
 }
