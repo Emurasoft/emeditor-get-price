@@ -112,6 +112,17 @@ fn build_options_response(cors_allowed: bool, origin: &str) -> Result<Response> 
     Ok(res)
 }
 
+/// Build CORS headers for normal (non-OPTIONS) responses.
+/// Mutates the provided response to add CORS headers when allowed.
+fn build_get_cors_headers(res: &mut Response, cors_allowed: bool, origin: &str) -> Result<()> {
+    if cors_allowed {
+        let h = res.headers_mut();
+        h.set("Access-Control-Allow-Origin", normalize_origin(origin))?;
+        h.set("Vary", "Origin")?;
+    }
+    Ok(())
+}
+
 /// Resolve currency and price for a given two-letter country code (e.g., "US", "JP").
 /// Falls back to USD if the country or currency is unmapped.
 fn get_currency_and_price(country: &str) -> PriceResponse {
@@ -163,11 +174,7 @@ async fn fetch(
     let out = get_currency_and_price(country.as_str());
 
     let mut res = Response::from_json(&out)?;
-    if cors_allowed {
-        let h = res.headers_mut();
-        h.set("Access-Control-Allow-Origin", normalize_origin(origin.as_str()))?;
-        h.set("Vary", "Origin")?;
-    }
+    build_get_cors_headers(&mut res, cors_allowed, origin.as_str())?;
 
     Ok(res)
 }
