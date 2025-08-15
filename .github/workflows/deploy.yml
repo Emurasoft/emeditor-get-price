@@ -21,6 +21,9 @@ jobs:
           toolchain: 1.89
           targets: wasm32-unknown-unknown
 
+      - name: Install Wrangler
+        run: npm install wrangler@4
+
       - name: Deploy Worker
         uses: cloudflare/wrangler-action@v3
         with:
