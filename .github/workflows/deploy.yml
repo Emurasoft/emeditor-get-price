@@ -24,6 +24,14 @@ jobs:
       - name: Install Wrangler
         run: npm install wrangler@4
 
+      - name: Install worker-build
+        run: cargo install worker-build
+
+      - name: Build worker-build
+        run: |
+          worker-build --release
+          wasm-opt build/worker.wasm --enable-bulk-memory -o build/worker.optimized.wasm
+
       - name: Deploy Worker
         uses: cloudflare/wrangler-action@v3
         with:

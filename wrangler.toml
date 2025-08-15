@@ -2,13 +2,8 @@ name = "emeditor-get-price"
 main = "build/worker/shim.mjs"
 compatibility_date = "2025-08-15"
 
-type = "rust"
-
 [build]
-command = "cargo install -q worker-build && worker-build --release"
-
-[wasm_opt]
-enabled = false
+command = "cargo install -q worker-build && wasm-opt build/worker.wasm --enable-bulk-memory -o build/worker.wasm"
 
 [observability.logs]
 enabled = true
