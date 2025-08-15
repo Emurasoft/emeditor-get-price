@@ -5,21 +5,21 @@ use serde::Serialize;
 /// Price information with annual and monthly amounts.
 #[derive(Clone, Copy, Debug)]
 pub struct Price {
-    pub annual: f64,
-    pub monthly: f64,
+    pub annual: &'static str,
+    pub monthly: &'static str,
 }
 
 pub static PRICES: phf::Map<&'static str, Price> = phf_map! {
-    "USD" => Price { annual: 60.0, monthly: 6.0 },
-    "JPY" => Price { annual: 9000.0, monthly: 900.0 },
-    "GBP" => Price { annual: 45.0, monthly: 4.50 },
-    "EUR" => Price { annual: 50.0, monthly: 5.0 },
-    "BRL" => Price { annual: 300.0, monthly: 30.0 },
-    "CNY" => Price { annual: 400.0, monthly: 40.0 },
-    "AUD" => Price { annual: 90.0, monthly: 9.0 },
-    "KRW" => Price { annual: 80000.0, monthly: 8000.0 },
-    "CAD" => Price { annual: 80.0, monthly: 8.0 },
-    "TWD" => Price { annual: 1600.0, monthly: 160.0 },
+    "USD" => Price { annual: "60", monthly: "6" },
+    "JPY" => Price { annual: "9000", monthly: "900" },
+    "GBP" => Price { annual: "45", monthly: "4.50" },
+    "EUR" => Price { annual: "50", monthly: "5" },
+    "BRL" => Price { annual: "300", monthly: "30" },
+    "CNY" => Price { annual: "400", monthly: "40" },
+    "AUD" => Price { annual: "90", monthly: "9" },
+    "KRW" => Price { annual: "80000", monthly: "8000" },
+    "CAD" => Price { annual: "80", monthly: "8" },
+    "TWD" => Price { annual: "1600", monthly: "160" },
 };
 
 /// Map from Cloudflare CF-IPCountry country code to currency code.
@@ -76,8 +76,8 @@ pub static COUNTRY_TO_CURRENCY: phf::Map<&'static str, &'static str> = phf_map! 
 #[derive(Serialize)]
 struct PriceResponse {
     currency: String,
-    annual: f64,
-    monthly: f64,
+    annual: &'static str,
+    monthly: &'static str,
 }
 
 #[event(fetch)]
