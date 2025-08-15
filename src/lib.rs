@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use worker::*;
+use phf::phf_map;
 
 /// Price information with annual and monthly amounts.
 #[derive(Clone, Copy, Debug)]
@@ -8,24 +8,19 @@ pub struct Price {
     pub monthly: f64,
 }
 
-thread_local! {
-    static PRICES: HashMap<&'static str, Price> = get_prices();
-}
-
-pub fn get_prices() -> HashMap<&'static str, Price> {
-    let mut m = HashMap::new();
-    m.insert("USD", Price { annual: 60.0, monthly: 6.0 });
-    m.insert("JPY", Price { annual: 9000.0, monthly: 900.0 });
-    m.insert("GBP", Price { annual: 45.0, monthly: 4.50 });
-    m.insert("EUR", Price { annual: 50.0, monthly: 5.0 });
-    m.insert("BRL", Price { annual: 300.0, monthly: 30.0 });
-    m.insert("CNY", Price { annual: 400.0, monthly: 40.0 });
-    m.insert("AUD", Price { annual: 90.0, monthly: 9.0 });
-    m.insert("KRW", Price { annual: 80000.0, monthly: 8000.0 });
-    m.insert("CAD", Price { annual: 80.0, monthly: 8.0 });
-    m.insert("TWD", Price { annual: 1600.0, monthly: 160.0 });
-    m
-}
+/// Compile-time perfect hash map of currency code to price using phf.
+pub static PRICES: phf::Map<&'static str, Price> = phf_map! {
+    "USD" => Price { annual: 60.0, monthly: 6.0 },
+    "JPY" => Price { annual: 9000.0, monthly: 900.0 },
+    "GBP" => Price { annual: 45.0, monthly: 4.50 },
+    "EUR" => Price { annual: 50.0, monthly: 5.0 },
+    "BRL" => Price { annual: 300.0, monthly: 30.0 },
+    "CNY" => Price { annual: 400.0, monthly: 40.0 },
+    "AUD" => Price { annual: 90.0, monthly: 9.0 },
+    "KRW" => Price { annual: 80000.0, monthly: 8000.0 },
+    "CAD" => Price { annual: 80.0, monthly: 8.0 },
+    "TWD" => Price { annual: 1600.0, monthly: 160.0 },
+};
 
 #[event(fetch)]
 async fn fetch(
@@ -35,11 +30,14 @@ async fn fetch(
 ) -> Result<Response> {
     console_error_panic_hook::set_once();
 
+    // Touch the PHF map to ensure it's referenced (no behavior change).
+    let _ = PRICES.get("USD");
+
     // Get the headers from the incoming request
     let headers = req.headers();
 
     // Get the value of the "CF-IPCountry" header.
     let country = headers.get("CF-IPCountry")?;
 
-    Response::ok(country)
+    Response::ok(country.unwrap_or_default())
 }
