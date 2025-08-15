@@ -8,7 +8,6 @@ pub struct Price {
     pub monthly: f64,
 }
 
-/// Compile-time perfect hash map of currency code to price using phf.
 pub static PRICES: phf::Map<&'static str, Price> = phf_map! {
     "USD" => Price { annual: 60.0, monthly: 6.0 },
     "JPY" => Price { annual: 9000.0, monthly: 900.0 },
@@ -22,6 +21,57 @@ pub static PRICES: phf::Map<&'static str, Price> = phf_map! {
     "TWD" => Price { annual: 1600.0, monthly: 160.0 },
 };
 
+/// Map from Cloudflare CF-IPCountry country code to currency code.
+pub static COUNTRY_TO_CURRENCY: phf::Map<&'static str, &'static str> = phf_map! {
+    // USD
+    "US" => "USD",
+
+    // JPY
+    "JP" => "JPY",
+
+    // GBP
+    "GB" => "GBP",
+
+    // EUR
+    "DE" => "EUR", // Germany
+    "FR" => "EUR", // France
+    "IT" => "EUR", // Italy
+    "ES" => "EUR", // Spain
+    "NL" => "EUR", // Netherlands
+    "BE" => "EUR", // Belgium
+    "AT" => "EUR", // Austria
+    "IE" => "EUR", // Ireland
+    "PT" => "EUR", // Portugal
+    "FI" => "EUR", // Finland
+    "GR" => "EUR", // Greece
+    "SK" => "EUR", // Slovakia
+    "SI" => "EUR", // Slovenia
+    "EE" => "EUR", // Estonia
+    "LV" => "EUR", // Latvia
+    "LT" => "EUR", // Lithuania
+    "LU" => "EUR", // Luxembourg
+    "CY" => "EUR", // Cyprus
+    "MT" => "EUR", // Malta
+
+    // BRL
+    "BR" => "BRL",
+
+    // CNY
+    "CN" => "CNY",
+
+    // AUD
+    "AU" => "AUD",
+
+    // KRW
+    "KR" => "KRW",
+
+    // CAD
+    "CA" => "CAD",
+
+    // TWD
+    "TW" => "TWD",
+};
+
 #[event(fetch)]
 async fn fetch(
     req: Request,
@@ -30,8 +80,9 @@ async fn fetch(
 ) -> Result<Response> {
     console_error_panic_hook::set_once();
 
-    // Touch the PHF map to ensure it's referenced (no behavior change).
+    // Touch the PHF maps to ensure they're referenced (no behavior change).
     let _ = PRICES.get("USD");
+    let _ = COUNTRY_TO_CURRENCY.get("US");
 
     // Get the headers from the incoming request
     let headers = req.headers();
