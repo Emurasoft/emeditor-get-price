@@ -2,8 +2,13 @@ name = "emeditor-get-price"
 main = "build/worker/shim.mjs"
 compatibility_date = "2025-08-15"
 
+type = "rust"
+
 [build]
-command = "cargo install -q worker-build && worker-build --release --no-wasm-opt"
+command = "cargo install -q worker-build && worker-build --release"
+
+[wasm_opt]
+enabled = false
 
 [observability.logs]
 enabled = true
