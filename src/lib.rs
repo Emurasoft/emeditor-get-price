@@ -98,9 +98,9 @@ fn is_allowed_origin(origin: &str) -> bool {
 }
 
 /// Build the response for a CORS preflight (OPTIONS) request, setting headers when allowed.
-fn build_options_response(cors_allowed: bool, origin: &str) -> Result<Response> {
+fn build_options_response(origin: &str) -> Result<Response> {
     let mut res = Response::empty()?.with_status(204);
-    if cors_allowed {
+    if is_allowed_origin(origin) {
         let h = res.headers_mut();
         // Use the request Origin exactly (no wildcard) when allowed
         h.set("Access-Control-Allow-Origin", normalize_origin(origin))?;
@@ -114,8 +114,8 @@ fn build_options_response(cors_allowed: bool, origin: &str) -> Result<Response> 
 
 /// Build CORS headers for normal (non-OPTIONS) responses.
 /// Mutates the provided response to add CORS headers when allowed.
-fn build_get_cors_headers(res: &mut Response, cors_allowed: bool, origin: &str) -> Result<()> {
-    if cors_allowed {
+fn build_get_cors_headers(res: &mut Response, origin: &str) -> Result<()> {
+    if is_allowed_origin(origin) {
         let h = res.headers_mut();
         h.set("Access-Control-Allow-Origin", normalize_origin(origin))?;
         h.set("Vary", "Origin, CF-IPCountry")?;
@@ -124,12 +124,12 @@ fn build_get_cors_headers(res: &mut Response, cors_allowed: bool, origin: &str) 
 }
 
 /// Build 405 Method Not Allowed response with appropriate headers.
-fn build_method_not_allowed_response(cors_allowed: bool, origin: &str) -> Result<Response> {
+fn build_method_not_allowed_response(origin: &str) -> Result<Response> {
     let mut res = Response::empty()?.with_status(405);
     {
         let h = res.headers_mut();
         h.set("Allow", "GET, OPTIONS")?;
-        if cors_allowed {
+        if is_allowed_origin(origin) {
             h.set("Access-Control-Allow-Origin", normalize_origin(origin))?;
             h.set("Vary", "Origin, CF-IPCountry")?;
         }
@@ -174,16 +174,15 @@ async fn fetch(
 
     // Resolve CORS origin
     let origin = headers.get("Origin")?.unwrap_or_default();
-    let cors_allowed = is_allowed_origin(origin.as_str());
 
     if method == Method::Options {
         // Handle CORS preflight
-        return build_options_response(cors_allowed, origin.as_str());
+        return build_options_response(origin.as_str());
     }
 
     // Only GET and OPTIONS is allowed
     if method != Method::Get {
-        return build_method_not_allowed_response(cors_allowed, origin.as_str());
+        return build_method_not_allowed_response(origin.as_str());
     }
 
     // Read Cloudflare's CF-IPCountry header (two-letter country code like "US", "JP").
@@ -193,7 +192,7 @@ async fn fetch(
     let out = get_currency_and_price(country.as_str());
 
     let mut res = Response::from_json(&out)?;
-    build_get_cors_headers(&mut res, cors_allowed, origin.as_str())?;
+    build_get_cors_headers(&mut res, origin.as_str())?;
 
     Ok(res)
 }
