@@ -42,8 +42,9 @@ async function outputPrice(id, plan) {
         return;
     }
 
+    let price;
     try {
-        const price = await getPrice();
+        price = await getPrice();
         if (!price || typeof price !== 'object') {
             return;
         }
@@ -57,3 +58,7 @@ async function outputPrice(id, plan) {
     }
 }
 
+// Auto-initialize after DOM is ready
+document.addEventListener('DOMContentLoaded', async () => {
+    await outputPrice('buynow-annual-price', 'annual');
+});
