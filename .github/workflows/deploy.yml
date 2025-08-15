@@ -27,10 +27,14 @@ jobs:
       - name: Install worker-build
         run: cargo install worker-build
 
-      - name: Build worker-build
+      - name: Install Binaryen
         run: |
-          worker-build --release
-          wasm-opt build/worker.wasm --enable-bulk-memory -o build/worker.optimized.wasm
+          BIN_VERSION=123
+          curl -LO https://github.com/WebAssembly/binaryen/releases/download/version_${BIN_VERSION}/binaryen-version_${BIN_VERSION}-x86_64-linux.tar.gz
+          tar -xzf binaryen-version_${BIN_VERSION}-x86_64-linux.tar.gz
+          sudo mv binaryen-version_${BIN_VERSION}/bin/* /usr/local/bin/
+
+      - run: wasm-opt --version
 
       - name: Deploy Worker
         uses: cloudflare/wrangler-action@v3

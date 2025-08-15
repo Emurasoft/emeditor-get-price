@@ -3,7 +3,7 @@ main = "build/worker/shim.mjs"
 compatibility_date = "2025-08-15"
 
 [build]
-command = "cargo install -q worker-build && wasm-opt build/worker.wasm --enable-bulk-memory -o build/worker.wasm"
+command = "cargo install -q worker-build && wasm-opt build/worker.wasm --enable-bulk-memory"
 
 [observability.logs]
 enabled = true
