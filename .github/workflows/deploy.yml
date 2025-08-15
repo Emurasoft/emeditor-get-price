@@ -39,7 +39,7 @@ jobs:
 
       - name: Optimize WASM
         run: |
-          wasm-opt target/wasm32-unknown-unknown/release/emeditor_get_price.wasm -o build/worker.wasm --enable-bulk-memory --enable-bulk-memory-opt -O
+          wasm-opt target/wasm32-unknown-unknown/release/worker.wasm -o build/worker.wasm --enable-bulk-memory --enable-bulk-memory-opt -O
 
       - name: Deploy Worker
         uses: cloudflare/wrangler-action@v3
