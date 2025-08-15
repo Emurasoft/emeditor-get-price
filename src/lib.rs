@@ -10,16 +10,16 @@ pub struct Price {
 }
 
 pub static PRICES: phf::Map<&'static str, Price> = phf_map! {
-    "USD" => Price { annual: "60", monthly: "6" },
-    "JPY" => Price { annual: "9000", monthly: "900" },
-    "GBP" => Price { annual: "45", monthly: "4.50" },
-    "EUR" => Price { annual: "50", monthly: "5" },
-    "BRL" => Price { annual: "300", monthly: "30" },
-    "CNY" => Price { annual: "400", monthly: "40" },
-    "AUD" => Price { annual: "90", monthly: "9" },
-    "KRW" => Price { annual: "80000", monthly: "8000" },
-    "CAD" => Price { annual: "80", monthly: "8" },
-    "TWD" => Price { annual: "1600", monthly: "160" },
+    "USD" => Price { annual: "$60", monthly: "$6" },
+    "JPY" => Price { annual: "9000円", monthly: "900円" },
+    "GBP" => Price { annual: "£45", monthly: "£4.50" },
+    "EUR" => Price { annual: "€50", monthly: "€5" },
+    "BRL" => Price { annual: "R$300", monthly: "R$30" },
+    "CNY" => Price { annual: "400元", monthly: "40元" },
+    "AUD" => Price { annual: "A$90", monthly: "A$9" },
+    "KRW" => Price { annual: "₩80000", monthly: "₩8000" },
+    "CAD" => Price { annual: "C$80", monthly: "C$8" },
+    "TWD" => Price { annual: "NT$1600", monthly: "NT$160" },
 };
 
 /// Map from Cloudflare CF-IPCountry country code to currency code.
@@ -75,7 +75,7 @@ pub static COUNTRY_TO_CURRENCY: phf::Map<&'static str, &'static str> = phf_map! 
 
 #[derive(Serialize)]
 struct PriceResponse {
-    currency: String,
+    currency: &'static str,
     annual: &'static str,
     monthly: &'static str,
 }
@@ -107,7 +107,7 @@ async fn fetch(
 
     // Build a serializable response and use Response::from_json to set JSON body and headers.
     let out = PriceResponse {
-        currency: currency.to_string(),
+        currency,
         annual: price.annual,
         monthly: price.monthly,
     };
