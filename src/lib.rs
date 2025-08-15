@@ -104,9 +104,9 @@ fn build_options_response(cors_allowed: bool, origin: &str) -> Result<Response> 
         let h = res.headers_mut();
         // Use the request Origin exactly (no wildcard) when allowed
         h.set("Access-Control-Allow-Origin", normalize_origin(origin))?;
-        h.set("Vary", "Origin")?;
+        h.set("Vary", "Origin, CF-IPCountry")?;
         h.set("Access-Control-Allow-Methods", "GET, OPTIONS")?;
-        h.set("Access-Control-Allow-Headers", "Content-Type, CF-IPCountry")?;
+        h.set("Access-Control-Allow-Headers", "Content-Type")?;
         h.set("Access-Control-Max-Age", "86400")?; // cache preflight for 1 day
     }
     Ok(res)
