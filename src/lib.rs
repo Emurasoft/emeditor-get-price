@@ -1,5 +1,6 @@
 use worker::*;
 use phf::phf_map;
+use serde::Serialize;
 
 /// Price information with annual and monthly amounts.
 #[derive(Clone, Copy, Debug)]
@@ -72,6 +73,13 @@ pub static COUNTRY_TO_CURRENCY: phf::Map<&'static str, &'static str> = phf_map! 
     "TW" => "TWD",
 };
 
+#[derive(Serialize)]
+struct PriceResponse {
+    currency: String,
+    annual: f64,
+    monthly: f64,
+}
+
 #[event(fetch)]
 async fn fetch(
     req: Request,
@@ -97,13 +105,12 @@ async fn fetch(
     // Look up the price for the resolved currency; default to USD if missing.
     let price = PRICES.get(currency).unwrap_or(&PRICES["USD"]);
 
-    // Create a minimal JSON response body manually to avoid extra dependencies.
-    let body = format!(
-        "{{\"currency\":\"{}\",\"annual\":{},\"monthly\":{}}}",
-        currency, price.annual, price.monthly
-    );
+    // Build a serializable response and use Response::from_json to set JSON body and headers.
+    let out = PriceResponse {
+        currency: currency.to_string(),
+        annual: price.annual,
+        monthly: price.monthly,
+    };
 
-    let mut resp = Response::ok(body)?;
-    resp.headers_mut().set("content-type", "application/json")?;
-    Ok(resp)
+    Response::from_json(&out)
 }
