@@ -14,7 +14,6 @@ thread_local! {
 
 pub fn get_prices() -> HashMap<&'static str, Price> {
     let mut m = HashMap::new();
-    // Annual / Monthly
     m.insert("USD", Price { annual: 60.0, monthly: 6.0 });
     m.insert("JPY", Price { annual: 9000.0, monthly: 900.0 });
     m.insert("GBP", Price { annual: 45.0, monthly: 4.50 });
@@ -40,10 +39,7 @@ async fn fetch(
     let headers = req.headers();
 
     // Get the value of the "CF-IPCountry" header.
-    // This header is automatically added by Cloudflare.
-    // We use unwrap_or_else to provide a default value if it's somehow missing.
-    let country = headers.get("CF-IPCountry")?
-        .unwrap_or_else(|| "unknown".to_string());
+    let country = headers.get("CF-IPCountry")?;
 
     Response::ok(country)
 }
