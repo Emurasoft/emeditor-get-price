@@ -73,6 +73,23 @@ pub static COUNTRY_TO_CURRENCY: phf::Map<&'static str, &'static str> = phf_map! 
     "TW" => "TWD",
 };
 
+/// Resolve currency and price for a given two-letter country code (e.g., "US", "JP").
+/// Falls back to USD if the country or currency is unmapped.
+fn get_currency_and_price(country: &str) -> PriceResponse {
+    let currency = COUNTRY_TO_CURRENCY
+        .get(country)
+        .copied()
+        .unwrap_or("USD");
+
+    let price = PRICES.get(currency).unwrap_or(&PRICES["USD"]);
+    
+    PriceResponse {
+        currency,
+        annual: price.annual,
+        monthly: price.monthly,
+    }
+}
+
 #[derive(Serialize)]
 struct PriceResponse {
     currency: &'static str,
@@ -96,21 +113,8 @@ async fn fetch(
         .get("CF-IPCountry")?
         .unwrap_or_default();
 
-    // Determine the currency; default to USD if missing/unmapped.
-    let currency = COUNTRY_TO_CURRENCY
-        .get(country.as_str())
-        .copied()
-        .unwrap_or("USD");
-
-    // Look up the price for the resolved currency; default to USD if missing.
-    let price = PRICES.get(currency).unwrap_or(&PRICES["USD"]);
-
-    // Build a serializable response and use Response::from_json to set JSON body and headers.
-    let out = PriceResponse {
-        currency,
-        annual: price.annual,
-        monthly: price.monthly,
-    };
+    // Determine currency and price using helper function.
+    let out = get_currency_and_price(country.as_str());
 
     Response::from_json(&out)
 }
