@@ -1,3 +1,5 @@
+#![allow(clippy::wildcard_imports)]
+
 use worker::*;
 use phf::phf_map;
 use serde::Serialize;
@@ -94,7 +96,7 @@ fn is_allowed_origin(origin: &str) -> bool {
         return false;
     }
     let norm = normalize_origin(origin);
-    ALLOWED_ORIGINS.iter().any(|&o| o == norm)
+    ALLOWED_ORIGINS.contains(&norm)
 }
 
 /// Build the response for a CORS preflight (OPTIONS) request, setting headers when allowed.
@@ -191,10 +193,10 @@ async fn fetch(
     // Determine currency and price using helper function.
     let out = get_currency_and_price(country.as_str());
 
-    let mut res = Response::from_json(&out)?;
-    build_get_cors_headers(&mut res, origin.as_str())?;
+    let mut response = Response::from_json(&out)?;
+    build_get_cors_headers(&mut response, origin.as_str())?;
 
-    Ok(res)
+    Ok(response)
 }
 
 #[cfg(test)]
