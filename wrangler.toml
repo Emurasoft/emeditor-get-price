@@ -1,9 +1,9 @@
 name = "emeditor-get-price"
-main = "build/worker/shim.mjs"
+main = "build/worker.wasm"
 compatibility_date = "2025-08-15"
 
 [build]
-command = "cargo install -q worker-build && worker-build --release"
+command = "cargo build --target wasm32-unknown-unknown --release"
 
 [observability.logs]
 enabled = true

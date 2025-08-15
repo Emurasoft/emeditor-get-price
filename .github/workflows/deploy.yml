@@ -34,7 +34,12 @@ jobs:
           tar -xzf binaryen-version_${BIN_VERSION}-x86_64-linux.tar.gz
           sudo mv binaryen-version_${BIN_VERSION}/bin/* /usr/local/bin/
 
-      - run: wasm-opt --version
+      - name: Build Rust Worker
+        run: cargo build --target wasm32-unknown-unknown --release
+
+      - name: Optimize WASM
+        run: |
+          wasm-opt target/wasm32-unknown-unknown/release/worker.wasm -o build/worker.wasm --enable-bulk-memory --enable-bulk-memory-opt -O
 
       - name: Deploy Worker
         uses: cloudflare/wrangler-action@v3
