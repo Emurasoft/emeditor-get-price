@@ -118,9 +118,23 @@ fn build_get_cors_headers(res: &mut Response, cors_allowed: bool, origin: &str) 
     if cors_allowed {
         let h = res.headers_mut();
         h.set("Access-Control-Allow-Origin", normalize_origin(origin))?;
-        h.set("Vary", "Origin")?;
+        h.set("Vary", "Origin, CF-IPCountry")?;
     }
     Ok(())
+}
+
+/// Build 405 Method Not Allowed response with appropriate headers.
+fn build_method_not_allowed_response(cors_allowed: bool, origin: &str) -> Result<Response> {
+    let mut res = Response::empty()?.with_status(405);
+    {
+        let h = res.headers_mut();
+        h.set("Allow", "GET, OPTIONS")?;
+        if cors_allowed {
+            h.set("Access-Control-Allow-Origin", normalize_origin(origin))?;
+            h.set("Vary", "Origin, CF-IPCountry")?;
+        }
+    }
+    Ok(res)
 }
 
 /// Resolve currency and price for a given two-letter country code (e.g., "US", "JP").
@@ -165,6 +179,11 @@ async fn fetch(
     if method == Method::Options {
         // Handle CORS preflight
         return build_options_response(cors_allowed, origin.as_str());
+    }
+
+    // Only GET and OPTIONS is allowed
+    if method != Method::Get {
+        return build_method_not_allowed_response(cors_allowed, origin.as_str());
     }
 
     // Read Cloudflare's CF-IPCountry header (two-letter country code like "US", "JP").
