@@ -97,6 +97,21 @@ fn is_allowed_origin(origin: &str) -> bool {
     ALLOWED_ORIGINS.iter().any(|&o| o == norm)
 }
 
+/// Build the response for a CORS preflight (OPTIONS) request, setting headers when allowed.
+fn build_options_response(cors_allowed: bool, origin: &str) -> Result<Response> {
+    let mut res = Response::empty()?.with_status(204);
+    if cors_allowed {
+        let h = res.headers_mut();
+        // Use the request Origin exactly (no wildcard) when allowed
+        h.set("Access-Control-Allow-Origin", normalize_origin(origin))?;
+        h.set("Vary", "Origin")?;
+        h.set("Access-Control-Allow-Methods", "GET, OPTIONS")?;
+        h.set("Access-Control-Allow-Headers", "Content-Type, CF-IPCountry")?;
+        h.set("Access-Control-Max-Age", "86400")?; // cache preflight for 1 day
+    }
+    Ok(res)
+}
+
 /// Resolve currency and price for a given two-letter country code (e.g., "US", "JP").
 /// Falls back to USD if the country or currency is unmapped.
 fn get_currency_and_price(country: &str) -> PriceResponse {
@@ -123,7 +138,7 @@ struct PriceResponse {
 
 #[event(fetch)]
 async fn fetch(
-    mut req: Request,
+    req: Request,
     _env: Env,
     _ctx: Context,
 ) -> Result<Response> {
@@ -138,18 +153,7 @@ async fn fetch(
 
     if method == Method::Options {
         // Handle CORS preflight
-        let mut res = Response::empty()?.with_status(204);
-        if cors_allowed {
-            let h = res.headers_mut();
-            // Use the request Origin exactly (no wildcard) when allowed
-            h.set("Access-Control-Allow-Origin", normalize_origin(origin.as_str()))?;
-            h.set("Vary", "Origin")?;
-            h.set("Access-Control-Allow-Methods", "GET, OPTIONS")?;
-            // Allow common headers; if specific headers requested, you could echo them back
-            h.set("Access-Control-Allow-Headers", "Content-Type, CF-IPCountry")?;
-            h.set("Access-Control-Max-Age", "86400")?; // cache preflight for 1 day
-        }
-        return Ok(res);
+        return build_options_response(cors_allowed, origin.as_str());
     }
 
     // Read Cloudflare's CF-IPCountry header (two-letter country code like "US", "JP").
