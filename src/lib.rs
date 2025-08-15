@@ -80,15 +80,30 @@ async fn fetch(
 ) -> Result<Response> {
     console_error_panic_hook::set_once();
 
-    // Touch the PHF maps to ensure they're referenced (no behavior change).
-    let _ = PRICES.get("USD");
-    let _ = COUNTRY_TO_CURRENCY.get("US");
-
     // Get the headers from the incoming request
     let headers = req.headers();
 
-    // Get the value of the "CF-IPCountry" header.
-    let country = headers.get("CF-IPCountry")?;
+    // Read Cloudflare's CF-IPCountry header (two-letter country code like "US", "JP").
+    let country = headers
+        .get("CF-IPCountry")?
+        .unwrap_or_default();
 
-    Response::ok(country.unwrap_or_default())
+    // Determine the currency; default to USD if missing/unmapped.
+    let currency = COUNTRY_TO_CURRENCY
+        .get(country.as_str())
+        .copied()
+        .unwrap_or("USD");
+
+    // Look up the price for the resolved currency; default to USD if missing.
+    let price = PRICES.get(currency).unwrap_or(&PRICES["USD"]);
+
+    // Create a minimal JSON response body manually to avoid extra dependencies.
+    let body = format!(
+        "{{\"currency\":\"{}\",\"annual\":{},\"monthly\":{}}}",
+        currency, price.annual, price.monthly
+    );
+
+    let mut resp = Response::ok(body)?;
+    resp.headers_mut().set("content-type", "application/json")?;
+    Ok(resp)
 }
