@@ -3,7 +3,7 @@ main = "build/worker/shim.mjs"
 compatibility_date = "2025-08-15"
 
 [build]
-command = "cargo install -q worker-build && worker-build --release"
+command = "RUSTFLAGS='-C target-feature=-bulk-memory' cargo install -q worker-build && worker-build --release"
 
 [observability.logs]
 enabled = true
