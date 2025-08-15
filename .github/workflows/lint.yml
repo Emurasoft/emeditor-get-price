@@ -1,0 +1,27 @@
+name: Rust Clippy Check
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  clippy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: 1.89.0
+          profile: minimal
+          override: true
+
+      - name: Run Clippy
+        uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features -W clippy::pedantic
