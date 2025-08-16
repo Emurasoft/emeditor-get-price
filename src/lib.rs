@@ -11,6 +11,7 @@ pub struct Price {
     pub monthly: &'static str,
 }
 
+// TODO add a "60 USD" price for other countries
 // pub static PRICES: phf::Map<&'static str, Price> = phf_map! {
 //     "USD" => Price { annual: "$60", monthly: "$6" },
 //     "JPY" => Price { annual: "9,000円", monthly: "900円" },
@@ -28,14 +29,14 @@ pub struct Price {
 pub static PRICES: phf::Map<&'static str, Price> = phf_map! {
     "USD" => Price { annual: "$48", monthly: "$6" },
     "JPY" => Price { annual: "7,200円", monthly: "900円" },
-    "GBP" => Price { annual: "$48", monthly: "£4.50" },
-    "EUR" => Price { annual: "$48", monthly: "€5" },
-    "BRL" => Price { annual: "$48", monthly: "R$30" },
-    "CNY" => Price { annual: "$48", monthly: "40元" },
-    "AUD" => Price { annual: "$48", monthly: "A$9" },
-    "KRW" => Price { annual: "$48", monthly: "₩8000" },
-    "CAD" => Price { annual: "$48", monthly: "C$8" },
-    "TWD" => Price { annual: "$48", monthly: "NT$160" },
+    "GBP" => Price { annual: "48 USD", monthly: "£4.50" },
+    "EUR" => Price { annual: "48 USD", monthly: "€5" },
+    "BRL" => Price { annual: "48 USD", monthly: "R$30" },
+    "CNY" => Price { annual: "48 USD", monthly: "40元" },
+    "AUD" => Price { annual: "48 USD", monthly: "A$9" },
+    "KRW" => Price { annual: "48 USD", monthly: "₩8000" },
+    "CAD" => Price { annual: "48 USD", monthly: "C$8" },
+    "TWD" => Price { annual: "48 USD", monthly: "NT$160" },
 };
 
 /// Map from Cloudflare CF-IPCountry country code to currency code.
