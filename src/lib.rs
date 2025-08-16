@@ -8,35 +8,36 @@ use serde::Serialize;
 #[derive(Clone, Copy, Debug)]
 pub struct Price {
     pub annual: &'static str,
+    pub annual_per_month: &'static str,
     pub monthly: &'static str,
 }
 
 // TODO add a "60 USD" price for other countries
 // pub static PRICES: phf::Map<&'static str, Price> = phf_map! {
-//     "USD" => Price { annual: "$60", monthly: "$6" },
-//     "JPY" => Price { annual: "9,000円", monthly: "900円" },
-//     "GBP" => Price { annual: "£45", monthly: "£4.50" },
-//     "EUR" => Price { annual: "€50", monthly: "€5" },
-//     "BRL" => Price { annual: "R$300", monthly: "R$30" },
-//     "CNY" => Price { annual: "400元", monthly: "40元" },
-//     "AUD" => Price { annual: "A$90", monthly: "A$9" },
-//     "KRW" => Price { annual: "₩80,000", monthly: "₩8,000" },
-//     "CAD" => Price { annual: "C$80", monthly: "C$8" },
-//     "TWD" => Price { annual: "NT$1,600", monthly: "NT$160" },
+//     "USD" => Price { annual: "$60", annual_per_month: "$5", monthly: "$6" },
+//     "JPY" => Price { annual: "9,000円", annual_per_month: "750円", monthly: "900円" },
+//     "GBP" => Price { annual: "£45", annual_per_month: "£3.75", monthly: "£4.50" },
+//     "EUR" => Price { annual: "€50", annual_per_month: "€4.17", monthly: "€5" },
+//     "BRL" => Price { annual: "R$300", annual_per_month: "R$25", monthly: "R$30" },
+//     "CNY" => Price { annual: "400元", annual_per_month: "33元", monthly: "40元" },
+//     "AUD" => Price { annual: "A$90", annual_per_month: "A$7.50", monthly: "A$9" },
+//     "KRW" => Price { annual: "₩80,000", annual_per_month: "₩6,667", monthly: "₩8,000" },
+//     "CAD" => Price { annual: "C$80", annual_per_month: "C$6.67", monthly: "C$8" },
+//     "TWD" => Price { annual: "NT$1,600", annual_per_month: "NT$133", monthly: "NT$160" },
 // };
 
 // Temporary prices until prices are updated
 pub static PRICES: phf::Map<&'static str, Price> = phf_map! {
-    "USD" => Price { annual: "$48", monthly: "$6" },
-    "JPY" => Price { annual: "7,200円", monthly: "900円" },
-    "GBP" => Price { annual: "48 USD", monthly: "£4.50" },
-    "EUR" => Price { annual: "48 USD", monthly: "€5" },
-    "BRL" => Price { annual: "48 USD", monthly: "R$30" },
-    "CNY" => Price { annual: "48 USD", monthly: "40元" },
-    "AUD" => Price { annual: "48 USD", monthly: "A$9" },
-    "KRW" => Price { annual: "48 USD", monthly: "₩8000" },
-    "CAD" => Price { annual: "48 USD", monthly: "C$8" },
-    "TWD" => Price { annual: "48 USD", monthly: "NT$160" },
+    "USD" => Price { annual: "$48", annual_per_month: "$4", monthly: "$6" },
+    "JPY" => Price { annual: "7,200円", annual_per_month: "600円", monthly: "900円" },
+    "GBP" => Price { annual: "48 USD", annual_per_month: "4 USD", monthly: "£4.50" },
+    "EUR" => Price { annual: "48 USD", annual_per_month: "4 USD", monthly: "€5" },
+    "BRL" => Price { annual: "48 USD", annual_per_month: "4 USD", monthly: "R$30" },
+    "CNY" => Price { annual: "48 USD", annual_per_month: "4 USD", monthly: "40元" },
+    "AUD" => Price { annual: "48 USD", annual_per_month: "4 USD", monthly: "A$9" },
+    "KRW" => Price { annual: "48 USD", annual_per_month: "4 USD", monthly: "₩8000" },
+    "CAD" => Price { annual: "48 USD", annual_per_month: "4 USD", monthly: "C$8" },
+    "TWD" => Price { annual: "48 USD", annual_per_month: "4 USD", monthly: "NT$160" },
 };
 
 /// Map from Cloudflare CF-IPCountry country code to currency code.
@@ -167,6 +168,7 @@ fn get_currency_and_price(country: &str) -> PriceResponse {
     PriceResponse {
         currency,
         annual: price.annual,
+        annual_per_month: price.annual_per_month,
         monthly: price.monthly,
     }
 }
@@ -175,6 +177,7 @@ fn get_currency_and_price(country: &str) -> PriceResponse {
 struct PriceResponse {
     currency: &'static str,
     annual: &'static str,
+    annual_per_month: &'static str,
     monthly: &'static str,
 }
 
@@ -223,13 +226,15 @@ mod tests {
         {
             let res = get_currency_and_price("JP");
             assert_eq!(res.currency, "JPY");
-            assert_eq!(res.annual, "9,000円");
+            assert_eq!(res.annual, "7,200円");
+            assert_eq!(res.annual_per_month, "600円");
             assert_eq!(res.monthly, "900円");
         }
         {
             let res = get_currency_and_price("ZZ");
             assert_eq!(res.currency, "USD");
-            assert_eq!(res.annual, "$60");
+            assert_eq!(res.annual, "$48");
+            assert_eq!(res.annual_per_month, "$4");
             assert_eq!(res.monthly, "$6");
         }
     }
