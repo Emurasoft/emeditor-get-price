@@ -27,14 +27,17 @@ async function getPrice() {
 }
 
 /**
- * Sets the text of a DOM element (by id) to the requested price field.
+ * Sets the text of a DOM element (by id) to the provided price string.
+ *
+ * Instead of fetching inside, this function only outputs the given string.
+ * Call getPrice() before invoking this function.
  *
  * @param {string} id - The id of the target DOM element.
- * @param {'annual'|'monthly'} plan - Which price field to display.
+ * @param {string} priceStr - The price string (or number) to display.
  * @returns {Promise<void>}
  */
-async function outputPrice(id, plan) {
-    if (!id || (plan !== 'annual' && plan !== 'monthly')) {
+async function outputPrice(id, priceStr) {
+    if (!id) {
         return;
     }
     const el = document.getElementById(id);
@@ -42,23 +45,19 @@ async function outputPrice(id, plan) {
         return;
     }
 
-    let price;
-    try {
-        price = await getPrice();
-        if (!price || typeof price !== 'object') {
-            return;
-        }
-    } catch (_e) {
-        return;
-    }
-
-    const value = price[plan];
-    if (typeof value === 'string' || typeof value === 'number') {
-        el.textContent = String(value);
+    if (typeof priceStr === 'string') {
+        el.textContent = priceStr;
     }
 }
 
 // Auto-initialize after DOM is ready
 document.addEventListener('DOMContentLoaded', async () => {
-    await outputPrice('buynow-annual-price', 'annual');
+    let price;
+    try {
+        price = await getPrice();
+    } catch (_e) {
+        return
+    }
+
+    await outputPrice('buynow-annual-price', price['annual']);
 });
