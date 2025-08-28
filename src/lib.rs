@@ -12,7 +12,8 @@ pub struct Price {
     pub monthly: &'static str,
 }
 
-// TODO add a "60 USD" price for other countries
+const OTHER_CURRENCY_NAME: &str = "Other";
+
 pub static PRICES: phf::Map<&'static str, Price> = phf_map! {
     "USD" => Price { annual: "$60", annual_per_month: "$5", monthly: "$6" },
     "JPY" => Price { annual: "9,000円", annual_per_month: "750円", monthly: "900円" },
@@ -24,6 +25,7 @@ pub static PRICES: phf::Map<&'static str, Price> = phf_map! {
     "KRW" => Price { annual: "₩80,000", annual_per_month: "₩6,667", monthly: "₩8,000" },
     "CAD" => Price { annual: "C$80", annual_per_month: "C$6.67", monthly: "C$8" },
     "TWD" => Price { annual: "NT$1,600", annual_per_month: "NT$133", monthly: "NT$160" },
+    "Other" => Price { annual: "60 USD", annual_per_month: "5 USD", monthly: "6 USD" },
 };
 
 /// Map from Cloudflare CF-IPCountry country code to currency code.
@@ -147,9 +149,9 @@ fn get_currency_and_price(country: &str) -> PriceResponse {
     let currency = COUNTRY_TO_CURRENCY
         .get(country)
         .copied()
-        .unwrap_or("USD");
+        .unwrap_or(OTHER_CURRENCY_NAME);
 
-    let price = PRICES.get(currency).unwrap_or(&PRICES["USD"]);
+    let price = PRICES.get(currency).unwrap_or(&PRICES[OTHER_CURRENCY_NAME]);
     
     PriceResponse {
         currency,
@@ -209,19 +211,19 @@ mod tests {
 
     #[test]
     fn test_get_currency_and_price() {
-        {
+        { // JP
             let res = get_currency_and_price("JP");
             assert_eq!(res.currency, "JPY");
-            assert_eq!(res.annual, "7,200円");
-            assert_eq!(res.annual_per_month, "600円");
+            assert_eq!(res.annual, "9,000円");
+            assert_eq!(res.annual_per_month, "750円");
             assert_eq!(res.monthly, "900円");
         }
-        {
+        { // Unknown country
             let res = get_currency_and_price("ZZ");
-            assert_eq!(res.currency, "USD");
-            assert_eq!(res.annual, "$48");
-            assert_eq!(res.annual_per_month, "$4");
-            assert_eq!(res.monthly, "$6");
+            assert_eq!(res.currency, OTHER_CURRENCY_NAME);
+            assert_eq!(res.annual, "60 USD");
+            assert_eq!(res.annual_per_month, "5 USD");
+            assert_eq!(res.monthly, "6 USD");
         }
     }
 }
