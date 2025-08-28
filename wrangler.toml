@@ -6,4 +6,4 @@ compatibility_date = "2025-08-14"
 command = "cargo install -q worker-build && worker-build --release"
 
 [observability.logs]
-enabled = true
+enabled = false
