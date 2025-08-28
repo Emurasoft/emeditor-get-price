@@ -12,6 +12,8 @@ pub struct Price {
     pub monthly: &'static str,
 }
 
+const OTHER_CURRENCY_NAME: &str = "Other";
+
 pub static PRICES: phf::Map<&'static str, Price> = phf_map! {
     "USD" => Price { annual: "$60", annual_per_month: "$5", monthly: "$6" },
     "JPY" => Price { annual: "9,000円", annual_per_month: "750円", monthly: "900円" },
@@ -147,9 +149,9 @@ fn get_currency_and_price(country: &str) -> PriceResponse {
     let currency = COUNTRY_TO_CURRENCY
         .get(country)
         .copied()
-        .unwrap_or("Other");
+        .unwrap_or(OTHER_CURRENCY_NAME);
 
-    let price = PRICES.get(currency).unwrap_or(&PRICES["Other"]);
+    let price = PRICES.get(currency).unwrap_or(&PRICES[OTHER_CURRENCY_NAME]);
     
     PriceResponse {
         currency,
@@ -218,7 +220,7 @@ mod tests {
         }
         { // Unknown country
             let res = get_currency_and_price("ZZ");
-            assert_eq!(res.currency, "Other");
+            assert_eq!(res.currency, OTHER_CURRENCY_NAME);
             assert_eq!(res.annual, "60 USD");
             assert_eq!(res.annual_per_month, "5 USD");
             assert_eq!(res.monthly, "6 USD");
