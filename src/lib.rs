@@ -147,9 +147,9 @@ fn get_currency_and_price(country: &str) -> PriceResponse {
     let currency = COUNTRY_TO_CURRENCY
         .get(country)
         .copied()
-        .unwrap_or("USD");
+        .unwrap_or("Other");
 
-    let price = PRICES.get(currency).unwrap_or(&PRICES["USD"]);
+    let price = PRICES.get(currency).unwrap_or(&PRICES["Other"]);
     
     PriceResponse {
         currency,
@@ -209,19 +209,19 @@ mod tests {
 
     #[test]
     fn test_get_currency_and_price() {
-        {
+        { // JP
             let res = get_currency_and_price("JP");
             assert_eq!(res.currency, "JPY");
-            assert_eq!(res.annual, "7,200円");
-            assert_eq!(res.annual_per_month, "600円");
+            assert_eq!(res.annual, "9,000円");
+            assert_eq!(res.annual_per_month, "750円");
             assert_eq!(res.monthly, "900円");
         }
-        {
+        { // Unknown country
             let res = get_currency_and_price("ZZ");
             assert_eq!(res.currency, "USD");
-            assert_eq!(res.annual, "$48");
-            assert_eq!(res.annual_per_month, "$4");
-            assert_eq!(res.monthly, "$6");
+            assert_eq!(res.annual, "60 USD");
+            assert_eq!(res.annual_per_month, "5 USD");
+            assert_eq!(res.monthly, "6 USD");
         }
     }
 }
