@@ -218,7 +218,7 @@ mod tests {
         }
         { // Unknown country
             let res = get_currency_and_price("ZZ");
-            assert_eq!(res.currency, "USD");
+            assert_eq!(res.currency, "Other");
             assert_eq!(res.annual, "60 USD");
             assert_eq!(res.annual_per_month, "5 USD");
             assert_eq!(res.monthly, "6 USD");
