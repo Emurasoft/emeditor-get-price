@@ -15,17 +15,61 @@ pub struct Price {
 const OTHER_CURRENCY_NAME: &str = "Other";
 
 pub static PRICES: phf::Map<&'static str, Price> = phf_map! {
-    "USD" => Price { annual: "$60", annual_per_month: "$5", monthly: "$6" },
-    "JPY" => Price { annual: "9,000円", annual_per_month: "750円", monthly: "900円" },
-    "GBP" => Price { annual: "£45", annual_per_month: "£3.75", monthly: "£4.50" },
-    "EUR" => Price { annual: "€50", annual_per_month: "€4.17", monthly: "€5" },
-    "BRL" => Price { annual: "R$300", annual_per_month: "R$25", monthly: "R$30" },
-    "CNY" => Price { annual: "400元", annual_per_month: "33元", monthly: "40元" },
-    "AUD" => Price { annual: "A$90", annual_per_month: "A$7.50", monthly: "A$9" },
-    "KRW" => Price { annual: "₩80,000", annual_per_month: "₩6,667", monthly: "₩8,000" },
-    "CAD" => Price { annual: "C$80", annual_per_month: "C$6.67", monthly: "C$8" },
-    "TWD" => Price { annual: "NT$1,600", annual_per_month: "NT$133", monthly: "NT$160" },
-    "Other" => Price { annual: "60 USD", annual_per_month: "5 USD", monthly: "6 USD" },
+    "USD" => Price {
+        annual: "$60",
+        annual_per_month: "$5",
+        monthly: "$6",
+    },
+    "JPY" => Price {
+        annual: "9,000円",
+        annual_per_month: "750円",
+        monthly: "900円",
+    },
+    "GBP" => Price {
+        annual: "£45",
+        annual_per_month: "£3.75",
+        monthly: "£4.50",
+    },
+    "EUR" => Price {
+        annual: "€50",
+        annual_per_month: "€4.17",
+        monthly: "€5",
+    },
+    "BRL" => Price {
+        annual: "R$300",
+        annual_per_month: "R$25",
+        monthly: "R$30",
+    },
+    "CNY" => Price {
+        annual: "400元",
+        annual_per_month: "33元",
+        monthly: "40元",
+    },
+    "AUD" => Price {
+        annual: "A$90",
+        annual_per_month: "A$7.50",
+        monthly: "A$9",
+    },
+    "KRW" => Price {
+        annual: "₩80,000",
+        annual_per_month: "₩6,667",
+        monthly: "₩8,000",
+    },
+    "CAD" => Price {
+        annual: "C$80",
+        annual_per_month: "C$6.67",
+        monthly: "C$8",
+    },
+    "TWD" => Price {
+        annual: "NT$1,600",
+        annual_per_month: "NT$133",
+        monthly: "NT$160",
+    },
+    "Other" => Price {
+        annual: "60 USD",
+        annual_per_month: "5 USD",
+        monthly: "6 USD",
+    },
 };
 
 /// Map from Cloudflare CF-IPCountry country code to currency code.
