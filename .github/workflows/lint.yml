@@ -21,5 +21,8 @@ jobs:
           profile: minimal
           override: true
 
+      - name: Test
+        run: cargo test
+
       - name: Run Clippy
         run: cargo clippy --all-features -- -W clippy::pedantic
