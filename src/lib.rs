@@ -274,6 +274,7 @@ mod tests {
             assert_eq!(res.currency, "JPY");
             assert_eq!(res.annual, "9,000円");
             assert_eq!(res.annual_per_month, "750円");
+            assert_eq!(res.annual_renewal_price, "6,750円");
             assert_eq!(res.monthly, "900円");
         }
         { // Unknown country
@@ -281,6 +282,7 @@ mod tests {
             assert_eq!(res.currency, OTHER_CURRENCY_NAME);
             assert_eq!(res.annual, "60 USD");
             assert_eq!(res.annual_per_month, "5 USD");
+            assert_eq!(res.annual_renewal_price, "45 USD");
             assert_eq!(res.monthly, "6 USD");
         }
     }
