@@ -37,11 +37,9 @@ async function getPrice() {
  * @returns {Promise<void>}
  */
 async function outputPrice(id, priceStr) {
-    if (!id) {
-        return;
-    }
     const el = document.getElementById(id);
     if (!el) {
+        console.error(`get-price: element with id ${id} not found`);
         return;
     }
 
@@ -50,7 +48,7 @@ async function outputPrice(id, priceStr) {
     }
 }
 
-// Auto-initialize after DOM is ready
+// Output prices to elements
 document.addEventListener('DOMContentLoaded', async () => {
     let price;
     try {
@@ -61,4 +59,5 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await outputPrice('buynow-annual-price', price['annual']);
     await outputPrice('buynow-annual-per-month-price', price['annual_per_month']);
+    await outputPrice('buynow-annual-renewal-price', price['annual_renewal_price']);
 });
