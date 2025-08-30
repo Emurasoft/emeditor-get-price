@@ -22,23 +22,11 @@ pub static PRICES: phf::Map<&'static str, Price> = phf_map! {
         annual_renewal_price: "$45",
         monthly: "$6",
     },
-    "JPY" => Price {
-        annual: "9,000円",
-        annual_per_month: "750円",
-        annual_renewal_price: "6,750円",
-        monthly: "900円",
-    },
-    "GBP" => Price {
-        annual: "£45",
-        annual_per_month: "£3.75",
-        annual_renewal_price: "£33.75",
-        monthly: "£4.50",
-    },
-    "EUR" => Price {
-        annual: "€50",
-        annual_per_month: "€4.17",
-        annual_renewal_price: "€37.50",
-        monthly: "€5",
+    "AUD" => Price {
+        annual: "A$90",
+        annual_per_month: "A$7.50",
+        annual_renewal_price: "A$67.50",
+        monthly: "A$9",
     },
     "BRL" => Price {
         annual: "R$300",
@@ -46,29 +34,41 @@ pub static PRICES: phf::Map<&'static str, Price> = phf_map! {
         annual_renewal_price: "R$225",
         monthly: "R$30",
     },
+    "CAD" => Price {
+        annual: "C$80",
+        annual_per_month: "C$6.67",
+        annual_renewal_price: "C$60",
+        monthly: "C$8",
+    },
     "CNY" => Price {
         annual: "400元",
         annual_per_month: "33元",
         annual_renewal_price: "300元",
         monthly: "40元",
     },
-    "AUD" => Price {
-        annual: "A$90",
-        annual_per_month: "A$7.50",
-        annual_renewal_price: "A$67.50",
-        monthly: "A$9",
+    "EUR" => Price {
+        annual: "€50",
+        annual_per_month: "€4.17",
+        annual_renewal_price: "€37.50",
+        monthly: "€5",
+    },
+    "GBP" => Price {
+        annual: "£45",
+        annual_per_month: "£3.75",
+        annual_renewal_price: "£33.75",
+        monthly: "£4.50",
+    },
+    "JPY" => Price {
+        annual: "9,000円",
+        annual_per_month: "750円",
+        annual_renewal_price: "6,750円",
+        monthly: "900円",
     },
     "KRW" => Price {
         annual: "₩80,000",
         annual_per_month: "₩6,667",
         annual_renewal_price: "₩60,000",
         monthly: "₩8,000",
-    },
-    "CAD" => Price {
-        annual: "C$80",
-        annual_per_month: "C$6.67",
-        annual_renewal_price: "C$60",
-        monthly: "C$8",
     },
     "TWD" => Price {
         annual: "NT$1,600",
