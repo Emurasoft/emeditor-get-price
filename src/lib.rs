@@ -9,6 +9,7 @@ use serde::Serialize;
 pub struct Price {
     pub annual: &'static str,
     pub annual_per_month: &'static str,
+    pub annual_renewal_price: &'static str,
     pub monthly: &'static str,
 }
 
@@ -201,6 +202,7 @@ fn get_currency_and_price(country: &str) -> PriceResponse {
         currency,
         annual: price.annual,
         annual_per_month: price.annual_per_month,
+        annual_renewal_price: price.annual_renewal_price,
         monthly: price.monthly,
     }
 }
@@ -210,6 +212,7 @@ struct PriceResponse {
     currency: &'static str,
     annual: &'static str,
     annual_per_month: &'static str,
+    annual_renewal_price: &'static str,
     monthly: &'static str,
 }
 
