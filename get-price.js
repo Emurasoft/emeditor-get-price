@@ -61,4 +61,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     await outputPrice('buynow-annual-per-month-price', price['annual_per_month']);
     await outputPrice('buynow-annual-renewal-price', price['annual_renewal_price']);
     await outputPrice('buynow-monthly-price', price['monthly']);
+    await outputPrice('buynow-monthly-renewal-price', price['monthly']);
 });
