@@ -10,11 +10,9 @@ release = false
 crate-type = ["cdylib"]
 
 [dependencies]
-worker = { version = "0.6", features = ['http'] }
-worker-macros = { version = "0.6", features = ['http'] }
+worker = { version = "0.7", features = ['http'] }
 console_error_panic_hook = { version = "0.1.7" }
-http = "1.4"
-phf = { version = "0.12.1", features = ["macros"] }
+phf = { version = "0.13.1", features = ["macros"] }
 serde = { version = "1.0", features = ["derive"] }
 
 [profile.release]
