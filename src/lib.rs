@@ -144,6 +144,12 @@ const ALLOWED_ORIGINS: phf::Set<&'static str> = phf_set! {
     "https://zh-cn.emeditor.com",
     "https://zh-tw.emeditor.com",
     "https://ru.emeditor.com",
+    "https://emeditor.wpengine.com",
+    "https://emeditorde.wpengine.com/",
+    "https://emeditorjp.wpengine.com/",
+    "https://emeditorko.wpengine.com/",
+    "https://emeditorzhcn.wpengine.com/",
+    "https://emeditorzhtw.wpengine.com/",
 };
 
 fn normalize_origin(origin: &str) -> &str {
