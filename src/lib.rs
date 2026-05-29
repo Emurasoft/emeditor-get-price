@@ -136,7 +136,7 @@ pub static COUNTRY_TO_CURRENCY: phf::Map<&'static str, &'static str> = phf_map! 
 };
 
 // CORS: allowed origins for emeditor.com properties
-const ALLOWED_ORIGINS: [&str; 7] = [
+const ALLOWED_ORIGINS: [&str; 13] = [
     "https://www.emeditor.com",
     "https://jp.emeditor.com",
     "https://ko.emeditor.com",
@@ -144,6 +144,12 @@ const ALLOWED_ORIGINS: [&str; 7] = [
     "https://zh-cn.emeditor.com",
     "https://zh-tw.emeditor.com",
     "https://ru.emeditor.com",
+    "https://emeditor.wpengine.com",
+    "https://emeditorde.wpengine.com/",
+    "https://emeditorjp.wpengine.com/",
+    "https://emeditorko.wpengine.com/",
+    "https://emeditorzhcn.wpengine.com/",
+    "https://emeditorzhtw.wpengine.com/",
 ];
 
 fn normalize_origin(origin: &str) -> &str {
