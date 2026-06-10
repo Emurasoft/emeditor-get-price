@@ -1,0 +1,1 @@
+Returns prices for the Buy Now page on emeditor.com.
