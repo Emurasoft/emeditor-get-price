@@ -1,4 +1,7 @@
 {
   "name": "emeditor-get-price",
-  "packageManager": "yarn@4.16.0"
+  "packageManager": "yarn@4.16.0",
+  "dependencies": {
+    "wrangler": "^4.97.0"
+  }
 }
