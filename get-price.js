@@ -57,9 +57,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         return
     }
 
-    await outputPrice('buynow-annual-price', price['annual']);
-    await outputPrice('buynow-annual-per-month-price', price['annual_per_month']);
-    await outputPrice('buynow-annual-renewal-price', price['annual_renewal_price']);
-    await outputPrice('buynow-monthly-price', price['monthly']);
-    await outputPrice('buynow-monthly-renewal-price', price['monthly']);
+    const idToKey = {
+        'buynow-annual-price': 'annual',
+        'buynow-annual-per-month-price': 'annual_per_month',
+        'buynow-annual-renewal-price': 'annual_renewal_price',
+        'buynow-monthly-price': 'monthly',
+        'buynow-monthly-renewal-price': 'monthly'
+    };
+
+    for (const id of Object.keys(idToKey)) {
+        await outputPrice(id, price[idToKey[id]]);
+    }
 });
