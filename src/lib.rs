@@ -31,61 +31,81 @@ pub static PRICES: phf::Map<&'static str, Price> = phf_map! {
         annual: "A$90",
         annual_per_month: "A$7.50",
         annual_renewal_price: "A$67.50",
+        annual_renewal_monthly_price: "A$5.63",
         monthly: "A$9",
+        monthly_per_year: "A$108",
     },
     "BRL" => Price {
         annual: "R$300",
         annual_per_month: "R$25",
         annual_renewal_price: "R$225",
+        annual_renewal_monthly_price: "R$18.75",
         monthly: "R$30",
+        monthly_per_year: "R$360",
     },
     "CAD" => Price {
         annual: "C$80",
         annual_per_month: "C$6.67",
         annual_renewal_price: "C$60",
+        annual_renewal_monthly_price: "C$5",
         monthly: "C$8",
+        monthly_per_year: "C$96",
     },
     "CNY" => Price {
         annual: "400元",
         annual_per_month: "33元",
         annual_renewal_price: "300元",
+        annual_renewal_monthly_price: "25元",
         monthly: "40元",
+        monthly_per_year: "480元",
     },
     "EUR" => Price {
         annual: "€50",
         annual_per_month: "€4.17",
         annual_renewal_price: "€37.50",
+        annual_renewal_monthly_price: "€3.13",
         monthly: "€5",
+        monthly_per_year: "€60",
     },
     "GBP" => Price {
         annual: "£45",
         annual_per_month: "£3.75",
         annual_renewal_price: "£33.75",
+        annual_renewal_monthly_price: "£2.81",
         monthly: "£4.50",
+        monthly_per_year: "£54",
     },
     "JPY" => Price {
         annual: "9,000円",
         annual_per_month: "750円",
         annual_renewal_price: "6,750円",
+        annual_renewal_monthly_price: "563円",
         monthly: "900円",
+        monthly_per_year: "10,800円",
     },
     "KRW" => Price {
         annual: "₩80,000",
         annual_per_month: "₩6,667",
         annual_renewal_price: "₩60,000",
+        annual_renewal_monthly_price: "₩5,000",
         monthly: "₩8,000",
+        monthly_per_year: "₩96,000",
     },
     "TWD" => Price {
         annual: "NT$1,600",
         annual_per_month: "NT$133",
         annual_renewal_price: "NT$1,200",
+        annual_renewal_monthly_price: "NT$100",
         monthly: "NT$160",
+        monthly_per_year: "NT$1,920",
     },
     "Other" => Price {
         annual: "60 USD",
         annual_per_month: "5 USD",
         annual_renewal_price: "45 USD",
+        annual_renewal_monthly_price: "3.75 USD",
         monthly: "6 USD",
+        monthly_per_year: "72 USD",
     },
 };
 
@@ -225,7 +245,9 @@ fn get_currency_and_price(country: &str) -> PriceResponse {
         annual: price.annual,
         annual_per_month: price.annual_per_month,
         annual_renewal_price: price.annual_renewal_price,
+        annual_renewal_monthly_price: price.annual_renewal_monthly_price,
         monthly: price.monthly,
+        monthly_per_year: price.monthly_per_year,
     }
 }
 
@@ -235,7 +257,9 @@ struct PriceResponse {
     annual: &'static str,
     annual_per_month: &'static str,
     annual_renewal_price: &'static str,
+    annual_renewal_monthly_price: &'static str,
     monthly: &'static str,
+    monthly_per_year: &'static str,
 }
 
 #[event(fetch)]
@@ -286,7 +310,9 @@ mod tests {
             assert_eq!(res.annual, "9,000円");
             assert_eq!(res.annual_per_month, "750円");
             assert_eq!(res.annual_renewal_price, "6,750円");
+            assert_eq!(res.annual_renewal_monthly_price, "563円");
             assert_eq!(res.monthly, "900円");
+            assert_eq!(res.monthly_per_year, "10,800円");
         }
         { // Unknown country
             let res = get_currency_and_price("ZZ");
@@ -294,7 +320,9 @@ mod tests {
             assert_eq!(res.annual, "60 USD");
             assert_eq!(res.annual_per_month, "5 USD");
             assert_eq!(res.annual_renewal_price, "45 USD");
+            assert_eq!(res.annual_renewal_monthly_price, "3.75 USD");
             assert_eq!(res.monthly, "6 USD");
+            assert_eq!(res.monthly_per_year, "72 USD");
         }
     }
 }
