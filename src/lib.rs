@@ -1,8 +1,6 @@
-#![allow(clippy::wildcard_imports)]
-
-use worker::*;
 use phf::{phf_map, phf_set};
 use serde::Serialize;
+use worker::{Result, Response, event, Request, Env, Context, Method};
 
 /// Price information with annual and monthly amounts.
 #[derive(Clone, Copy, Debug)]
