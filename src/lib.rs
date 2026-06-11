@@ -6,9 +6,14 @@ use worker::{Result, Response, event, Request, Env, Context, Method};
 #[derive(Clone, Copy, Debug)]
 pub struct Price {
     pub annual: &'static str,
+    // annual_per_month is annual / 12
     pub annual_per_month: &'static str,
     pub annual_renewal_price: &'static str,
+    // annual_renewal_monthly_price is annual_renewal_price / 12
+    pub annual_renewal_monthly_price: &'static str,
     pub monthly: &'static str,
+    // monthly_per_year is monthly * 12
+    pub monthly_per_year: &'static str,
 }
 
 const OTHER_CURRENCY_NAME: &str = "Other";
@@ -18,7 +23,9 @@ pub static PRICES: phf::Map<&'static str, Price> = phf_map! {
         annual: "$60",
         annual_per_month: "$5",
         annual_renewal_price: "$45",
+        annual_renewal_monthly_price: "$3.75",
         monthly: "$6",
+        monthly_per_year: "$72",
     },
     "AUD" => Price {
         annual: "A$90",
