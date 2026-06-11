@@ -66,9 +66,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         'buynow-annual-price': 'annual',
         'buynow-annual-per-month-price': 'annual_per_month',
         'buynow-annual-renewal-price': 'annual_renewal_price',
-        'buynow-annual_renewal_monthly_price': 'annual_renewal_monthly_price',
+        'buynow-annual-renewal-monthly-price': 'annual_renewal_monthly_price',
         'buynow-monthly-price': 'monthly',
-        'buynow-monthly_per_year-price': 'monthly_per_year',
+        'buynow-monthly-per-year-price': 'monthly_per_year',
         'buynow-monthly-renewal-price': 'monthly'
     };
 
