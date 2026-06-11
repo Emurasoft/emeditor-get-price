@@ -57,6 +57,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         return
     }
 
+    if (!price) {
+        console.log('get-price: endpoint returned invalid response');
+        return;
+    }
+
     const idToKey = {
         'buynow-annual-price': 'annual',
         'buynow-annual-per-month-price': 'annual_per_month',
@@ -66,6 +71,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     for (const id of Object.keys(idToKey)) {
-        await outputPrice(id, price[idToKey[id]]);
+        const key = idToKey[id];
+        if (price[key] === undefined) {
+            console.warn(`get-price: price for "${key}" is undefined`);
+            continue;
+        }
+        await outputPrice(id, price[key]);
     }
 });
