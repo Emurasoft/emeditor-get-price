@@ -1,0 +1,28 @@
+name: Rust Clippy Check
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  clippy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: 1.96.0
+          components: clippy
+          profile: minimal
+          override: true
+
+      - name: Test
+        run: cargo test
+
+      - name: Run Clippy
+        run: cargo clippy --all-features -- -W clippy::pedantic

@@ -1,0 +1,24 @@
+[package]
+name = "emeditor-get-price"
+version = "0.1.0"
+edition = "2021"
+
+[package.metadata.release]
+release = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+worker = { version = "0.8", features = ['http'] }
+console_error_panic_hook = { version = "0.1.7" }
+phf = { version = "0.14.0", default-features = false, features = ["macros"] }
+serde = { version = "1.0", features = ["derive"] }
+
+[profile.release]
+lto = true
+strip = true
+codegen-units = 1
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
