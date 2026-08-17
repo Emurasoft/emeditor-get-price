@@ -17,7 +17,6 @@ serde = { version = "1.0", features = ["derive"] }
 
 [profile.release]
 lto = true
-strip = true
 codegen-units = 1
 
 [package.metadata.wasm-pack.profile.release]
