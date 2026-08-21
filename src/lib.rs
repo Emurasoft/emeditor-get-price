@@ -187,7 +187,7 @@ fn is_allowed_origin(origin: &str) -> bool {
         return false;
     }
     let norm = normalize_origin(origin);
-    ALLOWED_ORIGINS.contains(&norm)
+    ALLOWED_ORIGINS.contains(norm)
 }
 
 /// Build the response for a CORS preflight (OPTIONS) request, setting headers when allowed.
